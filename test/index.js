@@ -1748,7 +1748,7 @@ test('flow (gnostic)', async function (t) {
       const quasi = statement.expression.quasis[0]
       assert(quasi)
       const value = quasi.value.cooked
-      assert.equal(value, '\nalpha\nbravo\ncharlie\n delta\n')
+      assert.equal(value, '\nalpha\n bravo\n  charlie\n   delta\n')
 
       /**
        * @this {CompileContext}
