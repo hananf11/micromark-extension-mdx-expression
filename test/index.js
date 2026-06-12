@@ -1760,6 +1760,42 @@ test('flow (gnostic)', async function (t) {
     }
   )
 
+  await t.test(
+    'should keep the correct number of spaces at the root',
+    function () {
+      /** @type {Program | undefined} */
+      let program
+
+      micromark('{`\nbravo\n  charlie\n    delta\n`}', {
+        extensions: [
+          createExtensionFromFactoryOptions(
+            acorn,
+            {ecmaVersion: 'latest'},
+            true
+          )
+        ],
+        htmlExtensions: [{enter: {expression}}]
+      })
+
+      assert(program)
+      const statement = program.body[0]
+      assert(statement.type === 'ExpressionStatement')
+      assert(statement.expression.type === 'TemplateLiteral')
+      const quasi = statement.expression.quasis[0]
+      assert(quasi)
+      const value = quasi.value.cooked
+      assert.equal(value, '\nbravo\n  charlie\n    delta\n')
+
+      /**
+       * @this {CompileContext}
+       * @type {Handle}
+       */
+      function expression(token) {
+        program = token.estree
+      }
+    }
+  )
+
   await t.test('should support `\\0` and `\\r` in expressions', function () {
     /** @type {Program | undefined} */
     let program
