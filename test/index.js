@@ -1796,6 +1796,19 @@ test('flow (gnostic)', async function (t) {
     }
   )
 
+  await t.test(
+    'should support a multiline non-string expression at the root',
+    async function () {
+      assert.equal(
+        micromark('{\n  1 + 1\n}', {
+          extensions: [mdxExpression({acorn})],
+          htmlExtensions: [html]
+        }),
+        ''
+      )
+    }
+  )
+
   await t.test('should support `\\0` and `\\r` in expressions', function () {
     /** @type {Program | undefined} */
     let program
